@@ -1,0 +1,19 @@
+package uz.pdp.homework_4jspinternetmagazin.entity;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Category {
+    private Integer id=idGen++;
+    private String name;
+    private static Integer idGen=0;
+
+    public Category(String name) {
+        this.name = name;
+    }
+}
+
