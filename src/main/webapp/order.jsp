@@ -22,8 +22,7 @@
 <body>
 <div class="card m-2 ">
     <%
-        List<Order> orders=new ArrayList<>();
-        Integer sum=0;
+        List<Order> orders = new ArrayList<>();
         Optional<Cookie> optionalCookie = Arrays.stream(request.getCookies()).filter(item -> item.getName().equals("userId")).findFirst();
         if (optionalCookie.isPresent()) {
             Integer userId = Integer.parseInt(optionalCookie.get().getValue());
@@ -34,25 +33,36 @@
         <- back
     </a>
     <h1>Orders</h1>
-    <p>==============================</p>
-    <%for (Order order : orders) {%>
-    <%
-            List<OrderItem> orderItems = DB.orderItems.stream().filter(item -> item.getOrderId().equals(order.getId())).toList();
-        for (OrderItem orderItem : orderItems) {
-                    Product product = DB.products.stream().filter(item -> item.getId().equals(orderItem.getProductId())).findFirst().get();
-    %>
-    <p>               product name: <%=product.getName()%> ------ total: <%=orderItem.getAmount()%></p>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Date Time</th>
+            <th>Status</th>
+            <th>UserId</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% for (Order order : orders) { %>
+        <tr>
+            <td><%= order.getId() %></td>
+            <td><%= order.getDateTime() %></td>
+            <td><%= order.getStatus() %></td>
+            <td><%= order.getUserId() %></td>
+            <td>
+                <form action="/OrderItems.jsp" method="get">
+                    <input type="hidden" name="orderId" value="<%= order.getId() %>">
+                    <button class="btn btn-dark">
+                        Show
+                    </button>
+                </form>
+            </td>
+        </tr>
+        <% } %>
+        </tbody>
+    </table>
 
-    <%sum+=product.getPrice()*orderItem.getAmount();
-        }%>
-    <p>user's id:  <%=order.getUserId()%>
-    </p>
-    <p> date_time:  <%=order.getDateTime()%>
-    <p> Total summa:  <%=sum%>
-    </p>
-    <br>
-    <p>==============================</p>
-    <%}%>
 </div>
 </body>
 </html>

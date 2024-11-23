@@ -16,7 +16,7 @@ public class Product {
     private String name;
     private boolean checked=false;
     private String photoUrl;
-    private static Integer idGen=0;
+    private static Integer idGen=9;
 
     public Product(Integer id, Integer categoryId, Integer price, String name, String photoUrl) {
         this.id = id;

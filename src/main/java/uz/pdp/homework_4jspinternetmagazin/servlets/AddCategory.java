@@ -24,6 +24,6 @@ public class AddCategory extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String name = req.getParameter("name");
         DB.categories.add(new Category(name));
-        resp.sendRedirect("/category.jsp");
+        resp.sendRedirect("/product.jsp");
     }
 }

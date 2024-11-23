@@ -37,25 +37,7 @@ public class DB {
     ));
     public static List<Order> orders=new ArrayList<>();
     public static List<OrderItem> orderItems=new ArrayList<>();
-    public static User CurrentUser=null;
+
     public static Map<Product,Integer> savatcha=new HashMap<>();
-    /*<div class="card">
-                <div class="my-1">
-                    <img src="/file/<%=product.getId()%>" alt="rasm topilmadi!" width="50" height="50">
-                    <%= product.getName()%>
-                </div>
-                <form action="/product">
-                    <input type="hidden" name="productId" value=<%=product.getId()%>>
-                    <input type="hidden" name="categoryId" value=<%=categoryIdStr%>>
-                    <%if (product.isChecked()) {%>
-                    <button class="btn btn-danger">
-                X
-                </button>
-                    <%} else {%>
-                    <button class="btn btn-dark">
-                Select
-                </button>
-                    <%}%>
-                </form>
-            </div>*/
+
 }

@@ -16,6 +16,7 @@ public class ProductServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Integer productId = Integer.parseInt(req.getParameter("productId"));
+        String categoryId = req.getParameter("categoryId");
         Product product = DB.products.stream()
                 .filter(item -> item.getId().equals(productId))
                 .findFirst().get();
@@ -27,6 +28,10 @@ public class ProductServlet extends HttpServlet {
             product.setChecked(true);
             DB.savatcha.put(product, 1);
         }
-        resp.sendRedirect("/product.jsp");
+        if (categoryId.equals("non")){
+            resp.sendRedirect("/product.jsp");
+        }else {
+            resp.sendRedirect("/product.jsp?categoryId="+categoryId);
+        }
     }
 }

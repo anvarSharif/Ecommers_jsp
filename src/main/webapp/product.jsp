@@ -18,31 +18,43 @@
     <link rel="stylesheet" href="/static/bootstrap.min.css">
 </head>
 <body>
+<%
+    List<Product> products = DB.products;
+    String categoryId = request.getParameter("categoryId");
+    if (categoryId != null) {
+        products = DB.products.stream().filter(item -> item.getCategoryId().equals(Integer.parseInt(categoryId))).toList();
+    }
+%>
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-3 vh-100 p-3 card">
             <div class="list-group">
-                <form action="/order.jsp">
-                    <button class="btn btn-secondary w-100 my-1">
-                        Orders
-                    </button>
-                </form>
-                <form action="/category.jsp">
-                    <button class="btn btn-secondary w-100 my-1">
-                        Category
+                <form action="/addCategory.jsp">
+                    <button class="btn btn-success w-100 my-1">
+                        Add Category
                     </button>
                 </form>
                 <form action="/product.jsp">
                     <button class="btn btn-secondary w-100 my-1">
-                        Product
+                        All
                     </button>
                 </form>
+
+                <%for (Category category : DB.categories) {%>
+                <form action="/product.jsp">
+                    <input type="hidden" name="categoryId" value="<%=category.getId()%>">
+                    <button class="btn btn-secondary w-100 my-1">
+                        <%=category.getName()%>
+                    </button>
+                </form>
+                <%}%>
             </div>
         </div>
 
         <div class="col-9 p-4 card">
             <form action="addProduct.jsp">
-                <button class="btn btn-dark w-25">
+                <button class="btn btn-success w-25">
                     Add Product
                 </button>
             </form>
@@ -76,14 +88,7 @@
 
             <div class="row">
                 <% for
-                (
-                        Product
-                                product
-                        :
-                        DB
-                                .
-                                products
-                ) { %>
+                (Product product : products) { %>
                 <div class="col-3">
                     <div class="card text-center mb-4">
                         <img src="/file/<%= product.getId() %>" class="card-img-top" alt="rasm topilmadi!"
@@ -102,14 +107,9 @@
                                             ) %> UZS</strong></p>
                             <form action="/product" method="post">
                                 <input type="hidden" name="productId" value="<%= product.getId() %>">
+                                <input type="hidden" name="categoryId" value="<%= categoryId!=null?categoryId:"non" %>">
                                 <% if
-                                (
-                                        product
-                                                .
-                                                isChecked
-                                                        (
-                                                        )
-                                ) { %>
+                                (product.isChecked()) { %>
                                 <button class="btn btn-danger">X</button>
                                 <% } else { %>
                                 <button class="btn btn-dark">Select</button>
