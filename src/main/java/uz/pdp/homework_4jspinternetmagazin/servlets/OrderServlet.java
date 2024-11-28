@@ -2,36 +2,35 @@ package uz.pdp.homework_4jspinternetmagazin.servlets;
 
 import uz.pdp.homework_4jspinternetmagazin.DB;
 import uz.pdp.homework_4jspinternetmagazin.Servise;
-import uz.pdp.homework_4jspinternetmagazin.entity.Order;
-import uz.pdp.homework_4jspinternetmagazin.entity.OrderItem;
+import uz.pdp.homework_4jspinternetmagazin.entity.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @WebServlet("/order")
 public class OrderServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        Basket basket = (Basket) session.getAttribute("basket");
+        if (basket==null||basket.getMap().isEmpty()){
+            resp.sendRedirect("/home.jsp");
+            return;
+        }
+        Map<Product, Integer> savatcha = basket.getMap();
 
-        boolean loggedUser = Servise.isLoggedUser(req);
-        if (!loggedUser) {
-            resp.sendRedirect("/login.jsp");
+        if (session.getAttribute("user")==null){
+            resp.sendRedirect("/auth/login.jsp");
             return;
         }
         List<OrderItem> tempOrderItems = new ArrayList<>();
-        Cookie cookie = Arrays.stream(req.getCookies()).filter(item -> item.getName().equals("userId")).findFirst().get();
-        Order order = new Order(Integer.parseInt(cookie.getValue()));
+        User user = (User) session.getAttribute("user");
+        Order order = new Order(user.getId());
         DB.orders.add(order);
-        DB.savatcha.forEach(
+        savatcha.forEach(
                 (key, value) -> {
                     tempOrderItems.add(new OrderItem(
                             order.getId(),
@@ -41,8 +40,8 @@ public class OrderServlet extends HttpServlet {
                 }
         );
         DB.orderItems.addAll(tempOrderItems);
-        DB.savatcha.clear();
-        DB.products.forEach(product -> product.setChecked(false));
-        resp.sendRedirect("/product.jsp");
+        savatcha.clear();
+        session.setAttribute("basket",basket);
+        resp.sendRedirect("/home.jsp");
     }
 }

@@ -1,7 +1,9 @@
 <%@ page import="uz.pdp.homework_4jspinternetmagazin.DB" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="uz.pdp.homework_4jspinternetmagazin.entity.Product" %>
-<%@ page import="java.util.Optional" %><%--
+<%@ page import="java.util.Optional" %>
+<%@ page import="uz.pdp.homework_4jspinternetmagazin.entity.Basket" %>
+<%@ page import="java.util.Objects" %><%--
   Created by IntelliJ IDEA.
   User: User
   Date: 18/11/2024
@@ -19,8 +21,9 @@
     <div class="card m-2">
         <div class="row">
             <%
+                Basket basket = (Basket) Objects.requireNonNullElse(session.getAttribute("basket"), new Basket());
                 Integer sum = 0;
-                for (Map.Entry<Product, Integer> entry : DB.savatcha.entrySet()) {
+                for (Map.Entry<Product, Integer> entry : basket.getMap().entrySet()) {
                     Product product = entry.getKey();
                     Integer amount = entry.getValue();
             %>

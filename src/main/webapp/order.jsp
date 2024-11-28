@@ -5,7 +5,8 @@
 <%@ page import="uz.pdp.homework_4jspinternetmagazin.entity.Product" %>
 <%@ page import="java.util.Arrays" %>
 <%@ page import="java.util.Optional" %>
-<%@ page import="java.util.ArrayList" %><%--
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="uz.pdp.homework_4jspinternetmagazin.entity.User" %><%--
   Created by IntelliJ IDEA.
   User: User
   Date: 20/11/2024
@@ -23,13 +24,12 @@
 <div class="card m-2 ">
     <%
         List<Order> orders = new ArrayList<>();
-        Optional<Cookie> optionalCookie = Arrays.stream(request.getCookies()).filter(item -> item.getName().equals("userId")).findFirst();
-        if (optionalCookie.isPresent()) {
-            Integer userId = Integer.parseInt(optionalCookie.get().getValue());
-            orders = DB.orders.stream().filter(item -> item.getUserId().equals(userId)).toList();
+        User user = (User) session.getAttribute("user");
+        if (user!=null) {
+            orders = DB.orders.stream().filter(item -> item.getUserId().equals(user.getId())).toList();
         }
     %>
-    <a href="/product.jsp" class="btn btn-dark w-25">
+    <a href="/home.jsp" class="btn btn-dark w-25">
         <- back
     </a>
     <h1>Orders</h1>

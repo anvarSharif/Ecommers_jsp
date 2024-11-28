@@ -31,13 +31,11 @@ public class DB {
     ));
 
     public static List<User> users=new ArrayList<>(List.of(
-            new User(101, "11", "aa"),
-            new User(102, "22", "aa"),
-            new User(103, "33", "aa")
+            new User(101, "7714", "aa",Role.ADMIN,absolutPath+ "files/user1.jpg"),
+            new User(102, "2222", "aa",absolutPath+ "files/user.jpg"),
+            new User(103, "3333", "aa",absolutPath+ "files/user.jpg")
     ));
     public static List<Order> orders=new ArrayList<>();
     public static List<OrderItem> orderItems=new ArrayList<>();
-
-    public static Map<Product,Integer> savatcha=new HashMap<>();
 
 }

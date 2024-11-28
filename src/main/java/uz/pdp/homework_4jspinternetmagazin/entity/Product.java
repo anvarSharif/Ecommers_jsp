@@ -7,14 +7,12 @@ import lombok.NoArgsConstructor;
 import java.util.Objects;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class Product {
     private Integer id=idGen;
     private Integer categoryId;
     private Integer price;
     private String name;
-    private boolean checked=false;
     private String photoUrl;
     private static Integer idGen=9;
 

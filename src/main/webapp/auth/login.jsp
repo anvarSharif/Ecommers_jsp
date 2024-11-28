@@ -23,6 +23,9 @@
         </div>
         <button class="btn btn-outline-secondary w-25 mx-5">sign in</button>
     </form>
+    <a href="/auth/register.jsp">
+        register
+    </a>
 </div>
 </body>
 </html>

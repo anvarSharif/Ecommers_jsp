@@ -1,10 +1,9 @@
 <%@ page import="uz.pdp.homework_4jspinternetmagazin.DB" %>
 <%@ page import="uz.pdp.homework_4jspinternetmagazin.entity.Category" %>
 <%@ page import="uz.pdp.homework_4jspinternetmagazin.entity.Product" %>
-<%@ page import="java.util.List" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="java.util.Arrays" %>
-<%@ page import="java.util.Optional" %><%--
+<%@ page import="java.util.*" %>
+<%@ page import="uz.pdp.homework_4jspinternetmagazin.entity.Basket" %>
+<%@ page import="uz.pdp.homework_4jspinternetmagazin.entity.User" %><%--
   Created by IntelliJ IDEA.
   User: User
   Date: 18/11/2024
@@ -24,25 +23,23 @@
     if (categoryId != null) {
         products = DB.products.stream().filter(item -> item.getCategoryId().equals(Integer.parseInt(categoryId))).toList();
     }
+    Basket basket = (Basket) Objects.requireNonNullElse(session.getAttribute("basket"), new Basket());
+    User user = (User) session.getAttribute("user");
 %>
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-3 vh-100 p-3 card">
-            <div class="list-group">
-                <form action="/addCategory.jsp">
-                    <button class="btn btn-success w-100 my-1">
-                        Add Category
-                    </button>
-                </form>
-                <form action="/product.jsp">
+            <div class="list-group" z>
+
+                <form action="/home.jsp">
                     <button class="btn btn-secondary w-100 my-1">
                         All
                     </button>
                 </form>
 
                 <%for (Category category : DB.categories) {%>
-                <form action="/product.jsp">
+                <form action="/home.jsp">
                     <input type="hidden" name="categoryId" value="<%=category.getId()%>">
                     <button class="btn btn-secondary w-100 my-1">
                         <%=category.getName()%>
@@ -52,41 +49,49 @@
             </div>
         </div>
 
-        <div class="col-9 p-4 card">
-            <form action="addProduct.jsp">
-                <button class="btn btn-success w-25">
-                    Add Product
-                </button>
-            </form>
-            <h3 class="mb-4">Mahsulotlar</h3>
+        <div class="col-9 card">
+            <div class="d-flex justify-content-between m-2  bg-dark text-white">
+                <%
+                    if (user != null) {%>
+                <div class="justify-content-center w-25 m-2">
+                    <a href="order.jsp">
+                        My Orders
+                    </a>
+                </div>
+                <%}%>
 
-            <div class="d-flex justify-content-between m-3">
-                <%
-                    if (request.getCookies() != null) {
-                        Optional<Cookie> optionalCookie = Arrays.stream(request.getCookies()).filter(item -> item.getName().equals("token")).findFirst();
-                        if (optionalCookie.isPresent()) {%>
-                <a href="order.jsp" class="btn btn-dark">
-                    Orders
-                </a>
-                <%
-                        }
-                    }
-                %>
-                <a href="login.jsp" class="btn btn-dark mx-2">
-                    Login
-                </a>
+                <div class="justify-content-center w-25 m-2">
+                    <%if (user != null) {%>
+                    <form action="/auth/logout" method="post">
+                        <button class="btn btn-dark">
+                            Logout
+                        </button>
+                    </form>
+
+                    <%} else {%>
+                    <a href="/auth/login.jsp">
+                        Login
+                    </a>
+                    <%}%>
+                </div>
+                <div>
+                    <%if (user != null) {%>
+                    <img src="/user/file/<%=user.getId()%>" height="50" width="50" class="rounded-circle"
+                         alt="topilmadi">
+                    <%=user.getPhone()%>
+                    <%}%>
+
+                </div>
+
+            </div>
+            <div class="justify-content-end w-25">
                 <a href="basket.jsp" class="btn btn-dark">
-                    Savatcha (<%=DB
-                        .
-                        savatcha
-                                .
-                        size
-                                (
-                                )%>)
+                    Savatcha (<%=basket.getMap().size()%>)
                 </a>
             </div>
 
             <div class="row">
+
                 <% for
                 (Product product : products) { %>
                 <div class="col-3">
@@ -94,27 +99,23 @@
                         <img src="/file/<%= product.getId() %>" class="card-img-top" alt="rasm topilmadi!"
                              style="height: 200px; object-fit: cover;">
                         <div class="card-body">
-                            <h5 class="card-title"><%= product
-                                    .
-                                    getName
-                                            (
-                                            ) %>
+                            <h5 class="card-title"><%= product.getName() %>
                             </h5>
-                            <p class="card-text">Narxi: <strong><%= product
-                                    .
-                                    getPrice
-                                            (
-                                            ) %> UZS</strong></p>
-                            <form action="/product" method="post">
+                            <p class="card-text">Narxi: <strong><%= product.getPrice() %> UZS</strong></p>
+
+                            <% if (basket.getMap().containsKey(product)) { %>
+                            <form action="/basket/delete" method="post">
                                 <input type="hidden" name="productId" value="<%= product.getId() %>">
                                 <input type="hidden" name="categoryId" value="<%= categoryId!=null?categoryId:"non" %>">
-                                <% if
-                                (product.isChecked()) { %>
                                 <button class="btn btn-danger">X</button>
-                                <% } else { %>
-                                <button class="btn btn-dark">Select</button>
-                                <% } %>
                             </form>
+                            <% } else { %>
+                            <form action="/basket/add" method="post">
+                                <input type="hidden" name="productId" value="<%= product.getId() %>">
+                                <input type="hidden" name="categoryId" value="<%= categoryId!=null?categoryId:"non" %>">
+                                <button class="btn btn-dark">Select</button>
+                            </form>
+                            <% } %>
                         </div>
                     </div>
                 </div>

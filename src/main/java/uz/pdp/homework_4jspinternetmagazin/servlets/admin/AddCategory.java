@@ -1,4 +1,4 @@
-package uz.pdp.homework_4jspinternetmagazin.servlets;
+package uz.pdp.homework_4jspinternetmagazin.servlets.admin;
 
 import uz.pdp.homework_4jspinternetmagazin.DB;
 import uz.pdp.homework_4jspinternetmagazin.entity.Category;
@@ -23,7 +23,13 @@ public class AddCategory extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String name = req.getParameter("name");
-        DB.categories.add(new Category(name));
-        resp.sendRedirect("/product.jsp");
+        String categoryId = req.getParameter("categoryId");
+        if (!categoryId.equals("null")){
+            Category category = DB.categories.stream().filter(item->item.getId().equals(Integer.parseInt(categoryId))).findAny().get();
+            category.setName(name);
+        }else {
+            DB.categories.add(new Category(name));
+        }
+        resp.sendRedirect("/admin/category.jsp");
     }
 }

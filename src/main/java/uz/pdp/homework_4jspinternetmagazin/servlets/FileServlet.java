@@ -25,6 +25,14 @@ public class FileServlet extends HttpServlet {
         Integer productId = Integer.parseInt(pathInfo.split("/")[1]);
         Product product = DB.products.stream().filter(item -> item.getId().equals(productId)).findFirst().get();
         resp.getOutputStream().write(Files.readAllBytes(Path.of(product.getPhotoUrl())));
+
+
+
+
+       /* String pathInfo = req.getPathInfo();
+        Integer productId = Integer.parseInt(pathInfo.split("/")[1]);
+        Product product = DB.products.stream().filter(item -> item.getId().equals(productId)).findFirst().get();
+        resp.getOutputStream().write(Files.readAllBytes(Path.of(product.getPhotoUrl())));*/
     }
 
     @Override
